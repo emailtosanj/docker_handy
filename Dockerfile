@@ -1,16 +1,15 @@
+# 1. Set the base image
 FROM python:3.9-slim
 
-#set the working directory
+# 2. Set the working directory
 WORKDIR /app
 
-#copies the requirements.txt in to the working directory
-COPY ./requirements.txt .
-
+# 3. Copy and install dependencies first to leverage caching
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-#copies all the app files in the working directory
-COPY ./app /app
+# 5. Copy the rest of the application code
+COPY . .
 
-#container start command
-CMD ['gunicorn', '--bind', '0.0.0.0:8000', 'app:server']
-
+# 6. Set the command to run the app
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:server"]
